@@ -7,7 +7,7 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "esnext", // or "es2020", "es2022", etc.
+    "module": "commonjs", // or "es2020", "es2022", etc.
     "target": "es2020",
     "types": ["jest"],
     // For nodejs:
@@ -19,6 +19,9 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
+
+    "moduleResolution": "node",
+    "esModuleInterop": true,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
