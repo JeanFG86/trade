@@ -1,7 +1,7 @@
-drop shema if exists trade;
-create shema trade;
+drop schema if exists trade cascade;
+create schema trade;
 
-create table account (
+create table trade.account (
     account_id uuid primary key,
     name text,
     email text,
