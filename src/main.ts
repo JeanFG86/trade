@@ -8,6 +8,18 @@ app.use(express.json());
 const connection = pgp()("postgres://postgres:123456@db/trade_db");
 console.log("Database connection established", connection);
 
+function validatePassword(password: string) {
+  if (password.length < 8)
+    return false;
+  if (!password.match(/[a-z]/))
+    return false;
+  if (!password.match(/[A-Z]/))
+    return false;
+  if (!password.match(/\d/))
+    return false;
+  return true;
+}
+
 app.post("/signup", async (req: Request, res: Response) => {
   const account = req.body;
   console.log("Signup endpoint hit with account data:", account);
@@ -27,6 +39,12 @@ app.post("/signup", async (req: Request, res: Response) => {
   if (!validateCpf(account.document)) {
     res.status(422).json(
       { message: "Invalid document" }
+    );
+    return;
+  }
+  if (!validatePassword(account.password)) {
+    res.status(422).json(
+      { message: "Invalid password" }
     );
     return;
   }

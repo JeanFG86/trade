@@ -10,7 +10,7 @@ describe("", () => {
       name: "John Doe",
       email: "john.doe@example.com",
       document: "02131041055",
-      password: "password123",
+      password: "passworD123",
     };
 
     //When
@@ -32,7 +32,7 @@ describe("", () => {
       name: "John",
       email: "john.doe@example.com",
       document: "02131041055",
-      password: "password123",
+      password: "passworD123",
     };
 
     const responseSignup = await axios.post("http://localhost:3000/signup", input);
@@ -46,7 +46,7 @@ describe("", () => {
       name: "John Doe",
       email: "john.doe",
       document: "02131041055",
-      password: "password123",
+      password: "passworD123",
     };
 
     const responseSignup = await axios.post("http://localhost:3000/signup", input);
@@ -55,17 +55,31 @@ describe("", () => {
     expect(outputSignup.message).toBe("Invalid email");
   });
 
-  // it("Não deve criar uma conta se o documento for inválido", async () => {
-  //   const input = {
-  //     name: "John Doe",
-  //     email: "john.doe@example.com",
-  //     document: "12345678900",
-  //     password: "password123",
-  //   };
+  it("Não deve criar uma conta se o documento for inválido", async () => {
+    const input = {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      document: "12345678900",
+      password: "passworD123",
+    };
 
-  //   const responseSignup = await axios.post("http://localhost:3000/signup", input);
-  //   expect(responseSignup.status).toBe(422);
-  //   const outputSignup = responseSignup.data;
-  //   expect(outputSignup.message).toBe("Invalid document");
-  // });
+    const responseSignup = await axios.post("http://localhost:3000/signup", input);
+    expect(responseSignup.status).toBe(422);
+    const outputSignup = responseSignup.data;
+    expect(outputSignup.message).toBe("Invalid document");
+  });
+
+  it("Não deve criar uma conta se a senha for inválida", async () => {
+    const input = {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      document: "02131041055",
+      password: "123",
+    };
+
+    const responseSignup = await axios.post("http://localhost:3000/signup", input);
+    expect(responseSignup.status).toBe(422);
+    const outputSignup = responseSignup.data;
+    expect(outputSignup.message).toBe("Invalid password");
+  });
 });
