@@ -9,7 +9,7 @@ describe("", () => {
     const input = {
       name: "John Doe",
       email: "john.doe@example.com",
-      document: "12345678900",
+      document: "02131041055",
       password: "password123",
     };
 
@@ -31,7 +31,7 @@ describe("", () => {
     const input = {
       name: "John",
       email: "john.doe@example.com",
-      document: "12345678900",
+      document: "02131041055",
       password: "password123",
     };
 
@@ -40,4 +40,32 @@ describe("", () => {
     const outputSignup = responseSignup.data;
     expect(outputSignup.message).toBe("Invalid name");
   });
+
+  it("Não deve criar uma conta se o email for inválido", async () => {
+    const input = {
+      name: "John Doe",
+      email: "john.doe",
+      document: "02131041055",
+      password: "password123",
+    };
+
+    const responseSignup = await axios.post("http://localhost:3000/signup", input);
+    expect(responseSignup.status).toBe(422);
+    const outputSignup = responseSignup.data;
+    expect(outputSignup.message).toBe("Invalid email");
+  });
+
+  // it("Não deve criar uma conta se o documento for inválido", async () => {
+  //   const input = {
+  //     name: "John Doe",
+  //     email: "john.doe@example.com",
+  //     document: "12345678900",
+  //     password: "password123",
+  //   };
+
+  //   const responseSignup = await axios.post("http://localhost:3000/signup", input);
+  //   expect(responseSignup.status).toBe(422);
+  //   const outputSignup = responseSignup.data;
+  //   expect(outputSignup.message).toBe("Invalid document");
+  // });
 });

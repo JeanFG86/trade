@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import crypo from "crypto";
+import { validateCpf } from "./validateCpf";
 import pgp from "pg-promise";
 const app = express();
 app.use(express.json());
@@ -17,6 +18,18 @@ app.post("/signup", async (req: Request, res: Response) => {
     );
     return;
   }
+  if (!account.email.match(/^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    res.status(422).json(
+      { message: "Invalid email" }
+    );
+    return;
+  }
+  if (!validateCpf(account.document)) {
+    res.status(422).json(
+      { message: "Invalid document" }
+    );
+    return;
+  }
   await connection.query("INSERT INTO trade.account (account_id, name, email, document, password) VALUES ($1, $2, $3, $4, $5)", [
     accountId,
     account.name,
@@ -29,7 +42,7 @@ app.post("/signup", async (req: Request, res: Response) => {
 
 app.get("/accounts/:accountId", async (req: Request, res: Response) => {
   const accountId = req.params.accountId;
-  const [account] = await connection.query("select * from trade.account", []);
+  const [account] = await connection.query("select * from trade.account where account_id = $1", [accountId]);
   res.json(account);
 });
 
