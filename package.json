@@ -7,7 +7,7 @@
     "dev": "nodemon src/main.ts",
     "docker:build": "docker build -t trade_backend docker",
     "docker:run": "docker run -it -v %cd%:/app trade_backend bash",
-    "compose:up": "docker-compose -f docker/docker-compose.yaml up -d --build",
+    "compose:up": "docker-compose -f docker/docker-compose.yaml up -d",
     "compose:down": "docker-compose -f docker/docker-compose.yaml -v down",
     "compose:exec": "docker-compose -f docker/docker-compose.yaml exec -it backend bash",
     "test": "jest"

@@ -11,7 +11,12 @@ app.post("/signup", async (req: Request, res: Response) => {
   const account = req.body;
   console.log("Signup endpoint hit with account data:", account);
   const accountId = crypo.randomUUID();
-  // No main.ts, dentro do app.post:
+  if (!account.name.match(/[a-zA-Z]+ [a-zA-Z]+/)) {
+    res.status(422).json(
+      { message: "Invalid name" }
+    );
+    return;
+  }
   await connection.query("INSERT INTO trade.account (account_id, name, email, document, password) VALUES ($1, $2, $3, $4, $5)", [
     accountId,
     account.name,
