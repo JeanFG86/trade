@@ -2,23 +2,12 @@ import express, { Request, Response } from "express";
 import crypo from "crypto";
 import { validateCpf } from "./validateCpf";
 import pgp from "pg-promise";
+import { validatePassword } from "./validatePassword";
 const app = express();
 app.use(express.json());
 
 const connection = pgp()("postgres://postgres:123456@db/trade_db");
 console.log("Database connection established", connection);
-
-function validatePassword(password: string) {
-  if (password.length < 8)
-    return false;
-  if (!password.match(/[a-z]/))
-    return false;
-  if (!password.match(/[A-Z]/))
-    return false;
-  if (!password.match(/\d/))
-    return false;
-  return true;
-}
 
 app.post("/signup", async (req: Request, res: Response) => {
   const account = req.body;
