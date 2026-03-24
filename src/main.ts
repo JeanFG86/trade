@@ -3,6 +3,8 @@ import crypo from "crypto";
 import { validateCpf } from "./validateCpf";
 import pgp from "pg-promise";
 import { validatePassword } from "./validatePassword";
+import { validateEmail } from "./validateEmail";
+import { validateName } from "./validateName";
 const app = express();
 app.use(express.json());
 
@@ -13,13 +15,13 @@ app.post("/signup", async (req: Request, res: Response) => {
   const account = req.body;
   console.log("Signup endpoint hit with account data:", account);
   const accountId = crypo.randomUUID();
-  if (!account.name.match(/[a-zA-Z]+ [a-zA-Z]+/)) {
+  if (!validateName(account.name)) {
     res.status(422).json(
       { message: "Invalid name" }
     );
     return;
   }
-  if (!account.email.match(/^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+  if (!validateEmail(account.email)) {
     res.status(422).json(
       { message: "Invalid email" }
     );
