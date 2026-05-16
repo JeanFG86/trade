@@ -1,3 +1,3 @@
 export function validateName(name: string): boolean {
-    return !!name.match(/[a-zA-Z]+ [a-zA-Z]+/);
+    return !!name.match(/^[A-Z][a-z]+ [A-Z][a-z]+$/);
 }

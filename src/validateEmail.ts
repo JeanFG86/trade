@@ -1,3 +1,3 @@
 export function validateEmail(email: string): boolean {
-    return !!email.match(/^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/);
+    return !!email.match(/^\S+@\S+\.\S+$/);
 }
