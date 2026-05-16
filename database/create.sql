@@ -8,3 +8,10 @@ create table trade.account (
     document text,
     password text
 );
+
+create table trade.account_asset (
+    account_id uuid,
+    asset_id uuid,
+    quantity decimal,
+    primary key (account_id, asset_id)
+);
