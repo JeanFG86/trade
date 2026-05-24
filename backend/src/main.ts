@@ -1,46 +1,24 @@
-import express, { Request, Response } from "express";
+
 import crypo from "crypto";
 import { validateCpf } from "./validateCpf";
 import pgp from "pg-promise";
 import { validatePassword } from "./validatePassword";
 import { validateEmail } from "./validateEmail";
 import { validateName } from "./validateName";
-import cors from "cors";
-const app = express();
-app.use(express.json());
-app.use(cors());
+import { error } from "console";
 
 const connection = pgp()("postgres://postgres:123456@db/trade_db");
 console.log("Database connection established", connection);
 
-app.post("/signup", async (req: Request, res: Response) => {
-  const account = req.body;
-  console.log("Signup endpoint hit with account data:", account);
+export const signup = async (account: any) => {
+
   const accountId = crypo.randomUUID();
-  if (!validateName(account.name)) {
-    res.status(422).json(
-      { message: "Invalid name" }
-    );
-    return;
-  }
-  if (!validateEmail(account.email)) {
-    res.status(422).json(
-      { message: "Invalid email" }
-    );
-    return;
-  }
-  if (!validateCpf(account.document)) {
-    res.status(422).json(
-      { message: "Invalid document" }
-    );
-    return;
-  }
-  if (!validatePassword(account.password)) {
-    res.status(422).json(
-      { message: "Invalid password" }
-    );
-    return;
-  }
+  if (!validateName(account.name)) throw new Error("Invalid name");
+  if (!validateEmail(account.email)) throw new Error("Invalid email");
+  if (!validateCpf(account.document)) throw new Error("Invalid document");
+  if (!validatePassword(account.password)) throw new Error("Invalid password");
+
+
   await connection.query("INSERT INTO trade.account (account_id, name, email, document, password) VALUES ($1, $2, $3, $4, $5)", [
     accountId,
     account.name,
@@ -48,15 +26,12 @@ app.post("/signup", async (req: Request, res: Response) => {
     account.document,
     account.password,
   ]);
-  res.json({ accountId });
-});
+  return {
+    accountId
+  }
+}
 
-app.get("/accounts/:accountId", async (req: Request, res: Response) => {
-  const accountId = req.params.accountId;
+export const getAccount = async (accountId: string) => {
   const [account] = await connection.query("select * from trade.account where account_id = $1", [accountId]);
-  res.json(account);
-});
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+  return account;
+}
