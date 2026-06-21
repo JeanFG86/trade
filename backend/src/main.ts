@@ -6,6 +6,7 @@ import { validatePassword } from "./validatePassword";
 import { validateEmail } from "./validateEmail";
 import { validateName } from "./validateName";
 import { error } from "console";
+import { getConnectionByAccountId, saveAccount } from "./data";
 
 const connection = pgp()("postgres://postgres:123456@db/trade_db");
 console.log("Database connection established", connection);
@@ -18,20 +19,13 @@ export const signup = async (account: any) => {
   if (!validateCpf(account.document)) throw new Error("Invalid document");
   if (!validatePassword(account.password)) throw new Error("Invalid password");
 
-
-  await connection.query("INSERT INTO trade.account (account_id, name, email, document, password) VALUES ($1, $2, $3, $4, $5)", [
-    accountId,
-    account.name,
-    account.email,
-    account.document,
-    account.password,
-  ]);
+  await saveAccount(account);
   return {
-    accountId
+    accountId: account.accountId
   }
 }
 
 export const getAccount = async (accountId: string) => {
-  const [account] = await connection.query("select * from trade.account where account_id = $1", [accountId]);
+  const account = await getConnectionByAccountId(accountId);
   return account;
 }
